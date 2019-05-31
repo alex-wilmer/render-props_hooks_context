@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { createContext } from "react";
+import "./App.css";
 
-function App() {
+const TextContext = createContext()
+
+function CoolInput () {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <TextContext.Consumer>
+      {value => 
+        <input value={value.text} onChange={value.setText} />
+      }
+    </TextContext.Consumer>
+  )
 }
 
-export default App;
+class App extends React.Component {
+  state = {
+    text: 123
+  }
+  
+  setText = e => this.setState({ text: e.target.value })
+  
+  render() {
+    return (
+      <TextContext.Provider value={{
+        text: this.state.text,
+        setText: this.setText
+      }}>
+        <CoolInput />
+      </TextContext.Provider>
+    )
+  }
+}
+
+export default App
